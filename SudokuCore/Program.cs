@@ -5,8 +5,9 @@ namespace SudokuCore
     {
         private static void Main(string[] args)
         {
-            
-            Console.WriteLine("Hello, World!");
+            Core core = new Core();
+            core.Init();
+            Screen.Show(core.Field);
         }
     }
 }
