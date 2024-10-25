@@ -12,7 +12,6 @@ namespace SudokuCore
             do
             {
                 keyInfo = Console.ReadKey(true);
-                Console.Clear();
                 Screen.MoveCursor(keyInfo);
                 //core.Init();
                 Screen.Show(core.Field);

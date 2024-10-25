@@ -43,28 +43,37 @@ namespace SudokuCore {
             }
             return true;
         }
+        private bool checkColumn(int x, int value)
+        {
+            for (int i = 0; i < tableSize; i++)
+            {
+                if (field[x, i] == value) return false;
+            }
+            return true;
+        }
+        private bool checkSrting(int y, int value)
+        {
+            for (int i = 0; i < tableSize; i++)
+            {
+                if (field[i, y] == value) return false;
+            }
+            return true;
+        }
         public bool SetValue(int x, int y, int value)
         {
-            if(field[x, y] == 0)
+            if (field[x, y] == 0 &&
+                checkColumn(x, value) &&
+                checkSrting(y, value) &&
+                checkRegion(x / 3, y / 3, value))
             {
-                for (int i = 0; i < tableSize; i++)
-                {
-                     if(field[i, y] == value) return false;
-                }
-                for (int i = 0; i < tableSize; i++)
-                {
-                    if (field[x, i] == value) return false;
-                }
-                if (checkRegion((int)x / 3, (int)y / 3, value))
-                {
-                    field[x, y] = value;
-                }
-                else
-                {
-                    return true;
-                }
+                field[x, y] = value;
+                return true;
             }
-            return false;
+            else
+            {
+                return false;
+            }
+
         }
         
     }

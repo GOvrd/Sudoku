@@ -12,7 +12,7 @@ namespace SudokuCore
         private static int cursorPosX = 0;
         private static int cursorPosY = 0;
         private static int[] posIndexX = {1, 3, 5, 9, 11, 13, 17, 19, 21 };
-        private static int[] posIndexY = {1, 2, 3, 5, 6, 7, 9, 10, 11 };
+        private static int[] posIndexY = {1, 2, 3, 5, 6,  7,  9,  10, 11 };
         public static void ShowPos()
         {
             Console.WriteLine(cursorPosX.ToString() + "  " + cursorPosY.ToString());
@@ -22,19 +22,19 @@ namespace SudokuCore
             if (-1 < cursorPosX && cursorPosX < Config.TableSize &&
                 -1 < cursorPosY && cursorPosY < Config.TableSize)
             {
-                if (cursorPosY != 0 && keyInfo.Key == ConsoleKey.W)
+                if (cursorPosY != 0 && keyInfo.Key == ConsoleKey.UpArrow)
                 {
                     cursorPosY += -1;
                 }
-                else if (cursorPosY != Config.TableSize - 1 && keyInfo.Key == ConsoleKey.S)
+                else if (cursorPosY != Config.TableSize - 1 && keyInfo.Key == ConsoleKey.DownArrow)
                 {
                     cursorPosY += 1;
                 }
-                else if (cursorPosX != 0 && keyInfo.Key == ConsoleKey.A)
+                else if (cursorPosX != 0 && keyInfo.Key == ConsoleKey.LeftArrow)
                 {
                     cursorPosX += -1;
                 }
-                else if (cursorPosX != Config.TableSize - 1 && keyInfo.Key == ConsoleKey.D)
+                else if (cursorPosX != Config.TableSize - 1 && keyInfo.Key == ConsoleKey.RightArrow)
                 {
                     cursorPosX += 1;
                 }
@@ -42,6 +42,7 @@ namespace SudokuCore
         }
         public static void Show(int[,] table)
         {
+            Console.Clear();
             Console.SetCursorPosition(posIndexX[cursorPosX] + 1, 0);
             Console.Write("v");
             Console.SetCursorPosition(0, posIndexY[cursorPosY]);
