@@ -7,18 +7,18 @@ namespace SudokuCore
         {
             Core core = new Core();
             core.Init();
+            Screen.Show(core.Field);
             ConsoleKeyInfo keyInfo;
             do
             {
-                keyInfo = Console.ReadKey();
+                keyInfo = Console.ReadKey(true);
                 Console.Clear();
                 Screen.MoveCursor(keyInfo);
-                core.Init();
+                //core.Init();
                 Screen.Show(core.Field);
                 //Screen.ShowPos();
                 //Thread.Sleep(1000);
             } while (keyInfo.Key != ConsoleKey.Escape);
-            //Screen.Show(core.Field);
         }
     }
 }
