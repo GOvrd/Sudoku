@@ -8,6 +8,7 @@ namespace SudokuCore
 {
     internal static class Config
     {
-        public static readonly int TableSize = 0;
+        public static readonly int TableSize = 9;
+        public static readonly int RegionSize = 3;
     }
 }

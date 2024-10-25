@@ -7,7 +7,13 @@ namespace SudokuCore
         {
             Core core = new Core();
             core.Init();
-            Screen.Show(core.Field);
+            while (true) {
+                Console.Clear();
+                core.Init();
+                Screen.Show(core.Field);
+                Thread.Sleep(1000);
+            }
+            //Screen.Show(core.Field);
         }
     }
 }
