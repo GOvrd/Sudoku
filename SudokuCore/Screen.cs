@@ -13,6 +13,9 @@ namespace SudokuCore
         private static int cursorPosY = 0;
         private static int[] posIndexX = {1, 3, 5, 9, 11, 13, 17, 19, 21 };
         private static int[] posIndexY = {1, 2, 3, 5, 6,  7,  9,  10, 11 };
+
+        public static int CursorPosX {  get { return cursorPosX; } }
+        public static int CursorPosY {  get { return cursorPosY; } }
         public static void ShowPos()
         {
             Console.WriteLine(cursorPosX.ToString() + "  " + cursorPosY.ToString());
