@@ -57,7 +57,7 @@ namespace SudokuCore
                 {
                     if(table[i, j] == 0)
                     {
-                        Console.Write(" *");
+                        Console.Write(" " + Config.EmptyChar);
                     }
                     else
                     {

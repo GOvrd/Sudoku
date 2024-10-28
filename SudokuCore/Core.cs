@@ -27,8 +27,13 @@ namespace SudokuCore {
                 for(int j = 0; j < field.GetLength(1); j++)
                 {
                     Random rnd = new Random();
-                    while (SetValue(i, j, rnd.Next(1, 9))) ;
-                   //field[i, j] = rnd.Next(0, 9);
+                    field[i, j] = rnd.Next(0, 9);
+                    //try
+                    //{
+                    //    while (SetValue(i, j, rnd.Next(1, 9))) ;
+                    //}
+                    //catch (Exception e) { }
+                    //field[i, j] = rnd.Next(0, 9);
                 }
             }
         }
@@ -47,7 +52,7 @@ namespace SudokuCore {
         {
             for (int i = 0; i < tableSize; i++)
             {
-                if (field[x, i] == value) return false;
+                if (field[i, x] == value) return false;
             }
             return true;
         }
@@ -55,24 +60,43 @@ namespace SudokuCore {
         {
             for (int i = 0; i < tableSize; i++)
             {
-                if (field[i, y] == value) return false;
+                if (field[y, i] == value) return false;
             }
             return true;
         }
         public bool SetValue(int x, int y, int value)
         {
-            if (field[x, y] == 0 &&
-                checkColumn(x, value) &&
-                checkSrting(y, value) &&
-                checkRegion(x / 3, y / 3, value))
+            if (field[x,y] != 0)
             {
-                field[x, y] = value;
-                return true;
+                throw new Exception("Cell not empty");
             }
-            else
+            if (!checkRegion(x / 3, y / 3, value))
             {
-                return false;
+                throw new Exception("There is such a number in the region");
             }
+            if (!checkColumn(x, value))
+            {
+                throw new Exception("There is a number in the column");
+            }
+            if(!checkSrting(y, value))
+            {
+                throw new Exception("There is a number in the line");
+            }
+            
+            field[x, y] = value;
+            return true;
+            //if (field[x, y] == 0 &&
+            //    checkColumn(x, value) &&
+            //    checkSrting(y, value) &&
+            //    checkRegion(x / 3, y / 3, value))
+            //{
+            //    field[x, y] = value;
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
 
         }
         
