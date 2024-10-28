@@ -9,25 +9,26 @@ using System.Threading.Tasks;
 namespace SudokuCore {
     
 
-    internal class Core
+    internal static class Core
     {
         private static int[,] field = new int[Config.TableSize, Config.TableSize];
         private static int tableSize = Config.TableSize;
         private static int regionSize = Config.RegionSize;
-        private static State condition = 0;
-        public int[,] Field { get{ return field; } }
-        public int TableSize { get { return tableSize; } }
-        public int RegionSize { get { return regionSize; } }
-        public State Condition { get { return condition; } }
+        private static States state = 0;
 
-        public enum State
+        public static int[,] Field { get{ return field; } }
+        public static int TableSize { get { return tableSize; } }
+        public static int RegionSize { get { return regionSize; } }
+        public static States State { get { return state; } }
+
+        public enum States
         {
             NonInit = 0,
             Generated = 1,
             Solved = 2
         }
 
-        public void Init()
+        public static void Init()
         {
             for (int i = 0; i < Config.TableSize; i++)
             {
@@ -37,17 +38,19 @@ namespace SudokuCore {
                 }
             }
         }
-        public void Generator()
+
+        public static void Generator()
         {
-            condition = State.Generated;
+            state = States.Generated;
             //Random rnd = new Random();
             field = new int[Config.TableSize, Config.TableSize];
             for (int i = 0; i < field.GetLength(0); i++)
             {
                 for (int j = 0; j < field.GetLength(1); j++)
                 {
-                    Random rnd = new Random();
-                    field[i, j] = rnd.Next(0, 9);
+                    field[i, j] = j + 1;
+                    //Random rnd = new Random();
+                    //field[i, j] = rnd.Next(0, 9);
                     //try
                     //{
                     //    while (SetValue(i, j, rnd.Next(1, 9))) ;
@@ -56,8 +59,31 @@ namespace SudokuCore {
                     //field[i, j] = rnd.Next(0, 9);
                 }
             }
+            for (int i = 0; i < Config.TableSize; i++)
+            {
+                shiftString(i, 1);
+            }
+            state = States.Generated;
         }
-        private bool checkRegion(int x, int y, int value)
+
+        private static void shiftString(int index, int shift)
+        {
+            for(int i = 0; i < shift; i++)
+            {
+                int temp = field[index, 0];
+                for(int j = 0; j < Config.TableSize - 2; j++)
+                {
+                    field[index, j] = field[index, j + 1];
+                }
+                field[index, Config.TableSize - 1] = temp;
+            }
+        }
+
+        private static void shiftColumn(int index, int shift) {
+
+        }
+
+        private static bool checkRegion(int x, int y, int value)
         {
             for (int i = x * Config.RegionSize; i < (x + 1) * Config.RegionSize; i++)
             {
@@ -68,7 +94,8 @@ namespace SudokuCore {
             }
             return true;
         }
-        private bool checkColumn(int x, int value)
+
+        private static bool checkColumn(int x, int value)
         {
             for (int i = 0; i < tableSize; i++)
             {
@@ -76,7 +103,8 @@ namespace SudokuCore {
             }
             return true;
         }
-        private bool checkSrting(int y, int value)
+
+        private static bool checkSrting(int y, int value)
         {
             for (int i = 0; i < tableSize; i++)
             {
@@ -84,7 +112,8 @@ namespace SudokuCore {
             }
             return true;
         }
-        public bool SetValue(int x, int y, int value)
+
+        public static bool SetValue(int x, int y, int value)
         {
             if (field[x,y] != 0)
             {
@@ -119,6 +148,5 @@ namespace SudokuCore {
             //}
 
         }
-        
     }
 }

@@ -18,25 +18,25 @@ namespace SudokuCore
         }
         private static void Main(string[] args)
         {
-            Core core = new Core();
-            core.Init();
-            Screen.Show(core.Field);
+            //Core core = new Core();
+            Core.Init();
+            Screen.Show(Core.Field);
             ConsoleKeyInfo keyInfo;
             do
             {
                 keyInfo = Console.ReadKey(false);
-                if(core.Condition == Core.State.NonInit &&  keyInfo.Key == Config.NewTableKey)
+                if(Core.State == Core.States.NonInit &&  keyInfo.Key == Config.NewTableKey)
                 {
-                    core.Generator();
+                    Core.Generator();
                 }
                 if(CheckNumber(keyInfo) != -1)
                 {
                     string message = "";
                     try
                     {
-                        if (core.SetValue(Screen.CursorPosY, Screen.CursorPosX, CheckNumber(keyInfo)))
+                        if (Core.SetValue(Screen.CursorPosY, Screen.CursorPosX, CheckNumber(keyInfo)))
                         {
-                            Screen.Show(core.Field);
+                            Screen.Show(Core.Field);
                             Console.SetCursorPosition(0, 14);
                             message = "Sucsess";
                         }
@@ -62,7 +62,7 @@ namespace SudokuCore
                 //    }
                 //}
                 Screen.MoveCursor(keyInfo);
-                Screen.Show(core.Field);
+                Screen.Show(Core.Field);
 
             } while (keyInfo.Key != ConsoleKey.Escape);
         }
