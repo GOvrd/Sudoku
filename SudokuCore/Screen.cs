@@ -8,7 +8,7 @@ namespace SudokuCore
 {
     internal static class Screen
     {
-        private static string buffer = "";
+        //private static string buffer = "";
         private static int cursorPosX = 0;
         private static int cursorPosY = 0;
         private static int[] posIndexX = {1, 3, 5, 9, 11, 13, 17, 19, 21 };
@@ -18,7 +18,7 @@ namespace SudokuCore
         public static int CursorPosY {  get { return cursorPosY; } }
         public static void ShowPos()
         {
-            Console.WriteLine(cursorPosX.ToString() + "  " + cursorPosY.ToString());
+            Console.WriteLine("X: " + (cursorPosX + 1).ToString() + "  Y:" + (cursorPosY + 1).ToString());
         }
         public static void MoveCursor(ConsoleKeyInfo keyInfo)
         {
@@ -57,7 +57,7 @@ namespace SudokuCore
                 {
                     if(table[i, j] == 0)
                     {
-                        Console.Write("  ");
+                        Console.Write(" *");
                     }
                     else
                     {
@@ -84,7 +84,7 @@ namespace SudokuCore
                 }
             }
             Console.WriteLine();
-            Console.WriteLine("X: " + (cursorPosX + 1).ToString() + "  Y:" + (cursorPosY + 1).ToString());
+            ShowPos();
             //Console.Write(  " 1  2  3 | 4  5  6 | 7  8  9\n" +
             //                " 1  2  3 | 4  5  6 | 7  8  9\n" +
             //                " 1  2  3 | 4  5  6 | 7  8  9\n" +

@@ -24,11 +24,12 @@ namespace SudokuCore
             ConsoleKeyInfo keyInfo;
             do
             {
-                keyInfo = Console.ReadKey(true);
+                keyInfo = Console.ReadKey(false);
                 if(CheckNumber(keyInfo) != -1)
                 {
-                    if (core.SetValue(Screen.CursorPosX, Screen.CursorPosY, CheckNumber(keyInfo)))
+                    if (core.SetValue(Screen.CursorPosY, Screen.CursorPosX, CheckNumber(keyInfo)))
                     {
+                        Screen.Show(core.Field);
                         Console.SetCursorPosition(0, 14);
                         Console.Write("Sucsess");
                         Thread.Sleep(2000);
