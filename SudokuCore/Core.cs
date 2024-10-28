@@ -14,17 +14,37 @@ namespace SudokuCore {
         private static int[,] field = new int[Config.TableSize, Config.TableSize];
         private static int tableSize = Config.TableSize;
         private static int regionSize = Config.RegionSize;
+        private static State condition = 0;
         public int[,] Field { get{ return field; } }
-        public int TableSize { get { return tableSize; } private set { } }
-        public int RegionSize { get { return regionSize; } private set { } }
+        public int TableSize { get { return tableSize; } }
+        public int RegionSize { get { return regionSize; } }
+        public State Condition { get { return condition; } }
+
+        public enum State
+        {
+            NonInit = 0,
+            Generated = 1,
+            Solved = 2
+        }
 
         public void Init()
         {
+            for (int i = 0; i < Config.TableSize; i++)
+            {
+                for(int j = 0; j < Config.TableSize; j++)
+                {
+                    field[i, j] = 0;
+                }
+            }
+        }
+        public void Generator()
+        {
+            condition = State.Generated;
             //Random rnd = new Random();
             field = new int[Config.TableSize, Config.TableSize];
             for (int i = 0; i < field.GetLength(0); i++)
             {
-                for(int j = 0; j < field.GetLength(1); j++)
+                for (int j = 0; j < field.GetLength(1); j++)
                 {
                     Random rnd = new Random();
                     field[i, j] = rnd.Next(0, 9);

@@ -25,24 +25,29 @@ namespace SudokuCore
             do
             {
                 keyInfo = Console.ReadKey(false);
+                if(core.Condition == Core.State.NonInit &&  keyInfo.Key == Config.NewTableKey)
+                {
+                    core.Generator();
+                }
                 if(CheckNumber(keyInfo) != -1)
                 {
+                    string message = "";
                     try
                     {
                         if (core.SetValue(Screen.CursorPosY, Screen.CursorPosX, CheckNumber(keyInfo)))
                         {
                             Screen.Show(core.Field);
                             Console.SetCursorPosition(0, 14);
-                            Console.Write("Sucsess");
-                            Thread.Sleep(2000);
+                            message = "Sucsess";
                         }
                     }
                     catch(Exception ex)
                     {
-                        Console.SetCursorPosition(0, 14);
-                        Console.Write(ex.Message);
-                        Thread.Sleep(2000);
+                        message = ex.Message;
                     }
+                    Console.SetCursorPosition(0, 14);
+                    Console.Write(message);
+                    Thread.Sleep(2000);
                 }
                 //if (keyInfo.Key == ConsoleKey.Enter)
                 //{

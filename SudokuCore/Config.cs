@@ -11,5 +11,6 @@ namespace SudokuCore
         public static readonly int TableSize = 9;
         public static readonly int RegionSize = 3;
         public static readonly char EmptyChar = ' ';
+        public static readonly ConsoleKey NewTableKey = ConsoleKey.N;
     }
 }
