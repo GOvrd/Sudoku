@@ -11,78 +11,121 @@ namespace SudokuCore {
 
     internal static class Core
     {
-        private static int[,] field = new int[Config.TableSize, Config.TableSize];
-        private static int tableSize = Config.TableSize;
-        private static int regionSize = Config.RegionSize;
-        private static States state = 0;
-
-        public static int[,] Field { get{ return field; } }
-        public static int TableSize { get { return tableSize; } }
-        public static int RegionSize { get { return regionSize; } }
-        public static States State { get { return state; } }
-
-        public enum States
+        internal enum States
         {
             NonInit = 0,
             Generated = 1,
             Solved = 2
         }
 
+        internal static class Generator
+        {
+            public static void New()
+            {
+                field = new int[Config.TableSize, Config.TableSize];
+                for (int i = 0; i < Config.TableSize; i++)
+                {
+                    for (int j = 0; j < Config.TableSize; j++)
+                    {
+                        field[i, j] = j + 1;
+                    }
+                }
+                int shift = -1;
+                for (int i = 0; i < Config.TableSize; i++, shift += 3)
+                {
+                    if(i % 3 == 0) shift++;
+                    shiftString(i, shift);
+                }
+                state = States.Generated;
+            }
+            //Обмен двух строк в пределах одного района(swap_rows_small)
+            //Обмен двух столбцов в пределах одного района(swap_colums_small)
+            //Обмен двух районов по горизонтали(swap_rows_area)
+            //Обмен двух районов по вертикали (swap_colums_area)
+            //Начальный сдвиг по горизонтали (shiftString)
+            //Начальный сдвиг по вертикали (shiftColumn)
+            //Транспонирование (transposition)
+            private static void swapRowsSmall(int first, int second)
+            {
+                for(int i = 0;i < Config.TableSize; i++)
+                {
+                    int tmp = field[first, i];
+                    field[first, i] = field[second, i];
+                    field[second, i] = tmp;
+                }
+            }
+            private static void swapColumnsSmall(int first, int second)
+            {
+                transposition();
+                swapRowsSmall(first, second);
+                transposition();
+            }
+            private static void swapRowsRegion()
+            {
+
+            }
+            private static void swapColumnsRegion()
+            {
+
+            }
+            private static void shiftString(int index, int shift)
+            {
+                for (int i = 0; i < shift; i++)
+                {
+                    int temp = field[index, 0];
+                    for (int j = 0; j < Config.TableSize - 1; j++)
+                    {
+                        field[index, j] = field[index, j + 1];
+                    }
+                    field[index, Config.TableSize - 1] = temp;
+                }
+            }
+            private static void shiftColumn(int index, int shift)
+            {
+                for (int i = 0; i < shift; i++)
+                {
+                    int temp = field[0, index];
+                    for (int j = 0; j < Config.TableSize - 2; j++)
+                    {
+                        field[j, index] = field[j + 1, index];
+                    }
+                    field[Config.TableSize - 1, index] = temp;
+                }
+            }
+            private static void transposition()
+            {
+                for (int i = 0; i < Config.TableSize; i++)
+                {
+                    for (int j = 0; j < Config.TableSize; j++)
+                    {
+                        int tmp = field[i, j];
+                        field[i, j] = field[j, i];
+                        field[j, i] = tmp;
+                    }
+                }
+            }
+        }
+
+        private static int[,] field = new int[Config.TableSize, Config.TableSize];
+        private static int tableSize = Config.TableSize;
+        private static int regionSize = Config.RegionSize;
+        private static States state = States.NonInit;
+
+        public static int[,] Field { get{ return field; } }
+        public static int TableSize { get { return tableSize; } }
+        public static int RegionSize { get { return regionSize; } }
+        public static States State { get { return state; } }
+
         public static void Init()
         {
             for (int i = 0; i < Config.TableSize; i++)
             {
-                for(int j = 0; j < Config.TableSize; j++)
+                for (int j = 0; j < Config.TableSize; j++)
                 {
                     field[i, j] = 0;
                 }
             }
-        }
-
-        public static void Generator()
-        {
-            state = States.Generated;
-            //Random rnd = new Random();
-            field = new int[Config.TableSize, Config.TableSize];
-            for (int i = 0; i < field.GetLength(0); i++)
-            {
-                for (int j = 0; j < field.GetLength(1); j++)
-                {
-                    field[i, j] = j + 1;
-                    //Random rnd = new Random();
-                    //field[i, j] = rnd.Next(0, 9);
-                    //try
-                    //{
-                    //    while (SetValue(i, j, rnd.Next(1, 9))) ;
-                    //}
-                    //catch (Exception e) { }
-                    //field[i, j] = rnd.Next(0, 9);
-                }
-            }
-            for (int i = 0; i < Config.TableSize; i++)
-            {
-                shiftString(i, 1);
-            }
-            state = States.Generated;
-        }
-
-        private static void shiftString(int index, int shift)
-        {
-            for(int i = 0; i < shift; i++)
-            {
-                int temp = field[index, 0];
-                for(int j = 0; j < Config.TableSize - 2; j++)
-                {
-                    field[index, j] = field[index, j + 1];
-                }
-                field[index, Config.TableSize - 1] = temp;
-            }
-        }
-
-        private static void shiftColumn(int index, int shift) {
-
-        }
-
+        }        
         private static bool checkRegion(int x, int y, int value)
         {
             for (int i = x * Config.RegionSize; i < (x + 1) * Config.RegionSize; i++)

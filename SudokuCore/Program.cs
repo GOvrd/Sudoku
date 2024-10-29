@@ -18,7 +18,6 @@ namespace SudokuCore
         }
         private static void Main(string[] args)
         {
-            //Core core = new Core();
             Core.Init();
             Screen.Show(Core.Field);
             ConsoleKeyInfo keyInfo;
@@ -27,7 +26,7 @@ namespace SudokuCore
                 keyInfo = Console.ReadKey(false);
                 if(Core.State == Core.States.NonInit &&  keyInfo.Key == Config.NewTableKey)
                 {
-                    Core.Generator();
+                    Core.Generator.New();
                 }
                 if(CheckNumber(keyInfo) != -1)
                 {
