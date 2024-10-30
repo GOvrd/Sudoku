@@ -46,7 +46,7 @@ namespace SudokuCore
                     }
                     Console.SetCursorPosition(0, 14);
                     Console.Write(message);
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1000);
                 }
                 //if (keyInfo.Key == ConsoleKey.Enter)
                 //{

@@ -137,7 +137,6 @@ namespace SudokuCore {
             }
             return true;
         }
-
         private static bool checkColumn(int x, int value)
         {
             for (int i = 0; i < tableSize; i++)
@@ -146,7 +145,6 @@ namespace SudokuCore {
             }
             return true;
         }
-
         private static bool checkSrting(int y, int value)
         {
             for (int i = 0; i < tableSize; i++)
@@ -155,7 +153,6 @@ namespace SudokuCore {
             }
             return true;
         }
-
         public static bool SetValue(int x, int y, int value)
         {
             if (field[x,y] != 0)
@@ -166,11 +163,11 @@ namespace SudokuCore {
             {
                 throw new Exception("There is such a number in the region");
             }
-            if (!checkColumn(x, value))
+            if (!checkColumn(y, value))
             {
                 throw new Exception("There is a number in the column");
             }
-            if(!checkSrting(y, value))
+            if(!checkSrting(x, value))
             {
                 throw new Exception("There is a number in the line");
             }
