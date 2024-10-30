@@ -30,23 +30,22 @@ namespace SudokuCore {
                         field[i, j] = j + 1;
                     }
                 }
-                int shift = 3;
+                int shift = Config.RegionSize;
                 for (int i = 1; i < Config.TableSize; i++)
                 {
                     for(int j = 0; j < Config.TableSize; j++)
                     {
                         field[i, j] = field[i - 1, j];
                     }
-                    if (i % 3 == 0) 
-                        shiftString(i, shift + 1);
-                    else 
-                        shiftString(i, shift);
+                    if (i % Config.RegionSize == 0) shiftString(i, 1);
+                    shiftString(i, Config.RegionSize);
 
                 }
                 //swapColumnsSmall(1, 2);
                 //swapRowsSmall(1, 2);
                 //swapRowsRegion(0, 1);
                 //swapColumnsRegion(0, 1);
+                //transposition();
                 state = States.Generated;
             }
             //Обмен двух строк в пределах одного района(swap_rows_small)
@@ -67,15 +66,9 @@ namespace SudokuCore {
             }
             private static void swapColumnsSmall(int first, int second)
             {
-                for (int i = 0; i < Config.TableSize; i++)
-                {
-                    int tmp = field[i, first];
-                    field[i, first] = field[i, second];
-                    field[i, second] = tmp;
-                }
-                //transposition();
-                //swapRowsSmall(first, second);
-                //transposition();
+                transposition();
+                swapRowsSmall(first, second);
+                transposition();
             }
             private static void swapRowsRegion(int first, int second)
             {
@@ -85,9 +78,9 @@ namespace SudokuCore {
             }
             private static void swapColumnsRegion(int first, int second)
             {
-                swapColumnsSmall(first * Config.RegionSize, second * Config.RegionSize);
-                swapColumnsSmall(first * Config.RegionSize + 1, second * Config.RegionSize + 1);
-                swapColumnsSmall(first * Config.RegionSize + 2, second * Config.RegionSize + 2);
+                transposition();
+                swapRowsRegion(first, second);
+                transposition();
             }
             private static void shiftString(int index, int shift)
             {
@@ -115,9 +108,9 @@ namespace SudokuCore {
             }
             private static void transposition()
             {
-                for (int i = 0; i < Config.TableSize; i++)
+                for (int i = 1; i < Config.TableSize; i++)
                 {
-                    for (int j = 0; j < Config.TableSize; j++)
+                    for (int j = 0; j < i; j++)
                     {
                         int tmp = field[i, j];
                         field[i, j] = field[j, i];
