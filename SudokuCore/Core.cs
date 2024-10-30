@@ -45,6 +45,8 @@ namespace SudokuCore {
                 }
                 //swapColumnsSmall(1, 2);
                 //swapRowsSmall(1, 2);
+                //swapRowsRegion(0, 1);
+                //swapColumnsRegion(0, 1);
                 state = States.Generated;
             }
             //Обмен двух строк в пределах одного района(swap_rows_small)
@@ -75,13 +77,17 @@ namespace SudokuCore {
                 //swapRowsSmall(first, second);
                 //transposition();
             }
-            private static void swapRowsRegion()
+            private static void swapRowsRegion(int first, int second)
             {
-
+                swapRowsSmall(first * Config.RegionSize, second * Config.RegionSize);
+                swapRowsSmall(first * Config.RegionSize + 1, second * Config.RegionSize + 1);
+                swapRowsSmall(first * Config.RegionSize + 2, second * Config.RegionSize + 2);
             }
-            private static void swapColumnsRegion()
+            private static void swapColumnsRegion(int first, int second)
             {
-
+                swapColumnsSmall(first * Config.RegionSize, second * Config.RegionSize);
+                swapColumnsSmall(first * Config.RegionSize + 1, second * Config.RegionSize + 1);
+                swapColumnsSmall(first * Config.RegionSize + 2, second * Config.RegionSize + 2);
             }
             private static void shiftString(int index, int shift)
             {
