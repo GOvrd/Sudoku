@@ -30,12 +30,21 @@ namespace SudokuCore {
                         field[i, j] = j + 1;
                     }
                 }
-                int shift = -1;
-                for (int i = 0; i < Config.TableSize; i++, shift += 3)
+                int shift = 3;
+                for (int i = 1; i < Config.TableSize; i++)
                 {
-                    if(i % 3 == 0) shift++;
-                    shiftString(i, shift);
+                    for(int j = 0; j < Config.TableSize; j++)
+                    {
+                        field[i, j] = field[i - 1, j];
+                    }
+                    if (i % 3 == 0) 
+                        shiftString(i, shift + 1);
+                    else 
+                        shiftString(i, shift);
+
                 }
+                //swapColumnsSmall(1, 2);
+                //swapRowsSmall(1, 2);
                 state = States.Generated;
             }
             //Обмен двух строк в пределах одного района(swap_rows_small)
@@ -56,9 +65,15 @@ namespace SudokuCore {
             }
             private static void swapColumnsSmall(int first, int second)
             {
-                transposition();
-                swapRowsSmall(first, second);
-                transposition();
+                for (int i = 0; i < Config.TableSize; i++)
+                {
+                    int tmp = field[i, first];
+                    field[i, first] = field[i, second];
+                    field[i, second] = tmp;
+                }
+                //transposition();
+                //swapRowsSmall(first, second);
+                //transposition();
             }
             private static void swapRowsRegion()
             {
@@ -111,28 +126,13 @@ namespace SudokuCore {
         private static int regionSize = Config.RegionSize;
         private static States state = States.NonInit;
 
-        public static int[,] Field { get{ return field; } }
-        public static int TableSize { get { return tableSize; } }
-        public static int RegionSize { get { return regionSize; } }
-        public static States State { get { return state; } }
-
-        public static void Init()
-        {
-            for (int i = 0; i < Config.TableSize; i++)
-            {
-                for (int j = 0; j < Config.TableSize; j++)
-                {
-                    field[i, j] = 0;
-                }
-            }
-        }        
         private static bool checkRegion(int x, int y, int value)
         {
             for (int i = x * Config.RegionSize; i < (x + 1) * Config.RegionSize; i++)
             {
-                for(int j = y * Config.RegionSize; j < (y + 1) * Config.RegionSize; j++)
+                for (int j = y * Config.RegionSize; j < (y + 1) * Config.RegionSize; j++)
                 {
-                    if(field[i, j] == value) return false;
+                    if (field[i, j] == value) return false;
                 }
             }
             return true;
@@ -153,6 +153,22 @@ namespace SudokuCore {
             }
             return true;
         }
+
+        public static int[,] Field { get{ return field; } }
+        public static int TableSize { get { return tableSize; } }
+        public static int RegionSize { get { return regionSize; } }
+        public static States State { get { return state; } }
+
+        public static void Init()
+        {
+            for (int i = 0; i < Config.TableSize; i++)
+            {
+                for (int j = 0; j < Config.TableSize; j++)
+                {
+                    field[i, j] = 0;
+                }
+            }
+        }        
         public static bool SetValue(int x, int y, int value)
         {
             if (field[x,y] != 0)
