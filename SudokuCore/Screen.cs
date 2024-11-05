@@ -43,14 +43,15 @@ namespace SudokuCore
                 }
             }
         }
-        public static void Show(int[,] table)
+        public static void Show(int[,] table, int seed)
         {
             Console.Clear();
-            Console.SetCursorPosition(posIndexX[cursorPosX] + 1, 0);
+            Console.WriteLine("Seed: " + seed.ToString());
+            Console.SetCursorPosition(posIndexX[cursorPosX] + 1, 1);
             Console.Write("v");
-            Console.SetCursorPosition(0, posIndexY[cursorPosY]);
+            Console.SetCursorPosition(0, posIndexY[cursorPosY] + 1);
             Console.Write(">");
-            Console.SetCursorPosition(1, 1);
+            Console.SetCursorPosition(1, 2);
             for (int i = 0; i < table.GetLength(0); i++)
             {
                 for(int j = 0; j < table.GetLength(1); j++)

@@ -1,10 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 
+//+---------------------------------------------+
+//|                 CORE(STRUCTURE)             |
+//|---------------===private===-----------------|
+//|     field <==> matrix TableSize x TableSize |
+//|                    (from Config file)       |
+//|                                             |
+//|     state - Not initialize,                 |
+//|             generated or                    |
+//|             solved                          |
+//|---------==========================----------|
+//|                                             |
+//|                 Init()----------------------|-->
+//|             Init field full zero            |
+//|                                             |
+//|               SetValue()-----------<--------|-<-
+//|         Try set new value to field          |
+//|           Or set and return true,           |
+//|       or throw exeption with message        |
+//|                                             |
+//|                         +-------------------+
+//|                         |     Generator     |
+//|                         |                   |
+//|                         |       New()-------|-->
+//|                         |    Gen new field  |
+//+-------------------------+-------------------+
 
 namespace SudokuCore {
     
@@ -20,17 +46,22 @@ namespace SudokuCore {
 
         internal static class Generator
         {
-            public static void New()
+            //map_seed will be more 100.000.000 and under 999.999.999
+            public static void New(int map_seed = 0)
+            //map_seed will be more 100.000.000 and under 999.999.999
             {
+                //12345
+                if (map_seed == 0)
+                {
+                    Random rnd = new Random();
+                   map_seed = rnd.Next(10000, 99999);
+                }
+                seed = map_seed;
                 field = new int[Config.TableSize, Config.TableSize];
                 for (int i = 0; i < Config.TableSize; i++)
-                {
-                    for (int j = 0; j < Config.TableSize; j++)
-                    {
-                        field[i, j] = j + 1;
-                    }
+                {     
+                    field[0, i] = i + 1;
                 }
-                int shift = Config.RegionSize;
                 for (int i = 1; i < Config.TableSize; i++)
                 {
                     for(int j = 0; j < Config.TableSize; j++)
@@ -39,14 +70,35 @@ namespace SudokuCore {
                     }
                     if (i % Config.RegionSize == 0) shiftString(i, 1);
                     shiftString(i, Config.RegionSize);
+                }
+                for(int i = 0; i < (seed % 10) * 5; i++)
+                {
+                    swapColumnsSmall((seed % 100) % 3, (seed % 1000 / 10) % 3);
+                    swapColumnsSmall((seed % 1000 / 10) % 3, (seed % 10000 / 100) % 3);
+                    swapColumnsSmall((seed % 10000 / 100) % 3, seed % 3);
 
+                    swapColumnsRegion((seed % 100) % 3, (seed % 1000 / 10) % 3);
+                    swapColumnsRegion((seed % 1000 / 10) % 3, (seed % 10000 / 100) % 3);
+                    swapColumnsRegion((seed % 10000 / 100) % 3, seed % 3);
+
+                    swapRowsSmall((seed % 100) % 3, (seed % 1000 / 10) % 3);
+                    swapRowsSmall((seed % 1000 / 10) % 3, (seed % 10000 / 100) % 3);
+                    swapRowsSmall((seed % 10000 / 100) % 3, seed % 3);
+
+                    swapRowsRegion((seed % 100) % 3, (seed % 1000 / 10) % 3);
+                    swapRowsRegion((seed % 1000 / 10) % 3, (seed % 10000 / 100) % 3);
+                    swapRowsRegion((seed % 10000 / 100) % 3, seed % 3);
+                    if((seed % 1000 / 100) % 2 == 1)
+                    {
+                        transpose();
+                    }
                 }
                 //swapColumnsSmall(1, 2);
                 //swapRowsSmall(1, 2);
                 //swapRowsRegion(0, 1);
                 //swapColumnsRegion(0, 1);
                 //transposition();
-                state = States.Generated;
+                //state = States.Generated;
             }
             //Обмен двух строк в пределах одного района(swap_rows_small)
             //Обмен двух столбцов в пределах одного района(swap_colums_small)
@@ -66,9 +118,9 @@ namespace SudokuCore {
             }
             private static void swapColumnsSmall(int first, int second)
             {
-                transposition();
+                transpose();
                 swapRowsSmall(first, second);
-                transposition();
+                transpose();
             }
             private static void swapRowsRegion(int first, int second)
             {
@@ -78,9 +130,9 @@ namespace SudokuCore {
             }
             private static void swapColumnsRegion(int first, int second)
             {
-                transposition();
+                transpose();
                 swapRowsRegion(first, second);
-                transposition();
+                transpose();
             }
             private static void shiftString(int index, int shift)
             {
@@ -106,7 +158,7 @@ namespace SudokuCore {
                     field[Config.TableSize - 1, index] = temp;
                 }
             }
-            private static void transposition()
+            private static void transpose()
             {
                 for (int i = 1; i < Config.TableSize; i++)
                 {
@@ -119,7 +171,7 @@ namespace SudokuCore {
                 }
             }
         }
-
+        private static int seed = 12345;
         private static int[,] field = new int[Config.TableSize, Config.TableSize];
         private static int tableSize = Config.TableSize;
         private static int regionSize = Config.RegionSize;
@@ -153,6 +205,7 @@ namespace SudokuCore {
             return true;
         }
 
+        public static int Seed { get { return seed; } }
         public static int[,] Field { get{ return field; } }
         public static int TableSize { get { return tableSize; } }
         public static int RegionSize { get { return regionSize; } }
